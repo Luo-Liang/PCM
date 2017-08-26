@@ -297,7 +297,7 @@ int main(int argc, char * argv[])
     uint32 i;
     uint32 delay_ms = uint32(delay * 1000 / num_events / NUM_SAMPLES);
     if(delay_ms * num_events * NUM_SAMPLES < delay * 1000) ++delay_ms; //Adjust the delay_ms if it's less than delay time
-    sample_t sample[max_sockets];
+    sample_t sample[max_sockets][num_events];
     cerr << "delay_ms: " << delay_ms << endl;
     
     if( sysCmd != NULL ) {
@@ -316,7 +316,7 @@ int main(int argc, char * argv[])
     unsigned int ic = 1;
     while ((ic <= numberOfIterations) || (numberOfIterations == 0))
     {
-        MySleepMs(delay_ms);
+        //MySleepMs(delay_ms);
         memset(sample,0,sizeof(sample));
         memset(&aggregate_sample,0,sizeof(aggregate_sample));
         
@@ -830,13 +830,22 @@ int main(int argc, char * argv[])
 	
     exit(EXIT_SUCCESS);
 }
+//[SocketIndex][EventIndex]
+#define MAX_SOCKET max_socket
+#define MAX_EVENTS 16
+PCIeCounterState before[MAX_SOCKET][MAX_EVENTS]; //Check this.
+PCIeCounterState after[MAX_SOCKET][MAX_EVENTS];
+PCIeCounterState before2[MAX_SOCKET][MAX_EVENTS];
+PCIeCounterState after2[MAX_SOCKET][MAX_EVENTS];
 
-void getPCIeEvents(PCM *m, PCM::PCIeEventCode opcode, uint32 delay_ms, sample_t *sample, const uint32 tid, const uint32 q, const uint32 nc)
+
+
+void getPCIeEvents(PCM *m, int eventCount, int socketCount, PCM::PCIeEventCode* opcode, uint32 delay_ms, sample_t **sample, const uint32 tid, const uint32 q, const uint32 nc)
 {
-    PCIeCounterState * before = new PCIeCounterState[m->getNumSockets()];
+    /*PCIeCounterState * before = new PCIeCounterState[m->getNumSockets()];
     PCIeCounterState * after = new PCIeCounterState[m->getNumSockets()];
     PCIeCounterState * before2 = new PCIeCounterState[m->getNumSockets()];
-    PCIeCounterState * after2 = new PCIeCounterState[m->getNumSockets()];
+    PCIeCounterState * after2 = new PCIeCounterState[m->getNumSockets()];*/
     uint32 i;
 
     m->programPCIeCounters(opcode, tid, 0, q, nc);
@@ -945,6 +954,6 @@ void getPCIeEvents(PCM *m, PCM::PCIeEventCode opcode, uint32 delay_ms, sample_t 
         }
     }
 
-    delete[] before;
-    delete[] after;
+    //delete[] before;
+    //delete[] after;
 }
