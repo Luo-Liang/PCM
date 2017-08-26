@@ -920,8 +920,8 @@ void getPCIeEvents(PCM *m,
             {
             case PCM::PCIeRdCur:
             case PCM::SKX_RdCur:
-                sample[i].total.PCIeRdCur += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                sample[i].miss.PCIeRdCur += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                sample[i].total.PCIeRdCur += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                sample[i].miss.PCIeRdCur += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.PCIeRdCur += (sample[i].total.PCIeRdCur > sample[i].miss.PCIeRdCur) ? sample[i].total.PCIeRdCur - sample[i].miss.PCIeRdCur : 0;
                 aggregate_sample.PCIeRdCur += sample[i].total.PCIeRdCur;
                 if (aggregate_sample.PCIeRdCur > maxReading.PCIeRdCur)
