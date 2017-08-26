@@ -34,7 +34,7 @@
 #include <assert.h>
 #include "cpucounters.h"
 #include "utils.h"
-
+#include <vector>
 #define PCM_DELAY_DEFAULT 1.0 // in seconds
 #define PCM_DELAY_MIN 0.015 // 15 milliseconds is practical on most modern CPUs
 #define PCM_CALIBRATION_INTERVAL 50 // calibrate clock only every 50th iteration
@@ -70,7 +70,15 @@ uint32 num_events = (sizeof(PCIeEvents_t)/sizeof(uint64));
 using namespace std;
 
 const uint32 max_sockets = 4;
-void getPCIeEvents(PCM *m, PCM::PCIeEventCode opcode, uint32 delay_ms, sample_t *sample, const uint32 tid=0, const uint32 q=0, const uint32 nc=0);
+void getPCIeEvents(PCM *m, 
+                    int eventCount, 
+                    int socketCount, 
+                    PCM::PCIeEventCode* opcode, 
+                    uint32 delay_ms, 
+                    sample_t **sample, 
+                    const uint32* tid, 
+                    const uint32* q, 
+                    const uint32* nc)
 
 void print_events()
 {
@@ -308,12 +316,32 @@ int main(int argc, char * argv[])
 	
 	
 	// additional info case
-
-
+    //create tids/
+    std::vector<uint32_t> tids(num_events, 0);
+    std::vector<uint32_t> qs(num_events, 0);
+    std::vector<uint32_t> nc(num_events,0);
+    std::vector<PCM::PCIeEventCode> opcodes;
+    if(!(m->getCPUModel() == PCM::JAKETOWN) && !(m->getCPUModel() == PCM::IVYTOWN))
+    {
+        if(m->getCPUModel() == PCM::SKX)
+        {
+            opcodes.push_back()
+        }
+    }
+    for(int i = 0; i < num_events;i++)
+    {
+        if(i <=4)
+        {
+            qs[i] = m->PRQ;
+        }
+    }
+ 
+    
 	if ( print_additional_info == true)
 	{
 
     unsigned int ic = 1;
+    //create static vector of tids.s
     while ((ic <= numberOfIterations) || (numberOfIterations == 0))
     {
         //MySleepMs(delay_ms);
@@ -840,7 +868,15 @@ PCIeCounterState after2[MAX_SOCKET][MAX_EVENTS];
 
 
 
-void getPCIeEvents(PCM *m, int eventCount, int socketCount, PCM::PCIeEventCode* opcode, uint32 delay_ms, sample_t **sample, const uint32 tid, const uint32 q, const uint32 nc)
+void getPCIeEvents(PCM *m, 
+                    int eventCount, 
+                    int socketCount, 
+                    PCM::PCIeEventCode* opcode, 
+                    uint32 delay_ms, 
+                    sample_t **sample, 
+                    const uint32* tid, 
+                    const uint32* q, 
+                    const uint32* nc)
 {
     /*PCIeCounterState * before = new PCIeCounterState[m->getNumSockets()];
     PCIeCounterState * after = new PCIeCounterState[m->getNumSockets()];
