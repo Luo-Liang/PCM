@@ -930,8 +930,8 @@ void getPCIeEvents(PCM *m,
                 }
                 break;
             case PCM::PCIeNSRd:
-                sample[i].total.PCIeNSRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                sample[i].miss.PCIeNSRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                sample[i].total.PCIeNSRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                sample[i].miss.PCIeNSRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.PCIeNSRd += (sample[i].total.PCIeNSRd > sample[i].miss.PCIeNSRd) ? sample[i].total.PCIeNSRd - sample[i].miss.PCIeNSRd : 0;
                 aggregate_sample.PCIeNSRd += sample[i].total.PCIeNSRd;
                 if (aggregate_sample.PCIeNSRd > maxReading.PCIeNSRd)
@@ -940,8 +940,8 @@ void getPCIeEvents(PCM *m,
                 }
                 break;
             case PCM::PCIeWiLF:
-                sample[i].total.PCIeWiLF += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                sample[i].miss.PCIeWiLF += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                sample[i].total.PCIeWiLF += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                sample[i].miss.PCIeWiLF += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.PCIeWiLF += (sample[i].total.PCIeWiLF > sample[i].miss.PCIeWiLF) ? sample[i].total.PCIeWiLF - sample[i].miss.PCIeWiLF : 0;
                 aggregate_sample.PCIeWiLF += sample[i].total.PCIeWiLF;
                 if (aggregate_sample.PCIeWiLF > maxReading.PCIeWiLF)
@@ -950,8 +950,8 @@ void getPCIeEvents(PCM *m,
                 }
                 break;
             case PCM::PCIeItoM:
-                sample[i].total.PCIeItoM += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                sample[i].miss.PCIeItoM += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                sample[i].total.PCIeItoM += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                sample[i].miss.PCIeItoM += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.PCIeItoM += (sample[i].total.PCIeItoM > sample[i].miss.PCIeItoM) ? sample[i].total.PCIeItoM - sample[i].miss.PCIeItoM : 0;
                 aggregate_sample.PCIeItoM += sample[i].total.PCIeItoM;
                 if (aggregate_sample.PCIeItoM > maxReading.PCIeItoM)
@@ -960,8 +960,8 @@ void getPCIeEvents(PCM *m,
                 }
                 break;
             case PCM::PCIeNSWr:
-                sample[i].total.PCIeNSWr += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                sample[i].miss.PCIeNSWr += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                sample[i].total.PCIeNSWr += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                sample[i].miss.PCIeNSWr += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.PCIeNSWr += (sample[i].total.PCIeNSWr > sample[i].miss.PCIeNSWr) ? sample[i].total.PCIeNSWr - sample[i].miss.PCIeNSWr : 0;
                 aggregate_sample.PCIeNSWr += sample[i].total.PCIeNSWr;
                 if (aggregate_sample.PCIeNSWr > maxReading.PCIeNSWr)
@@ -970,8 +970,8 @@ void getPCIeEvents(PCM *m,
                 }
                 break;
             case PCM::PCIeNSWrF:
-                sample[i].total.PCIeNSWrF += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                sample[i].miss.PCIeNSWrF += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                sample[i].total.PCIeNSWrF += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                sample[i].miss.PCIeNSWrF += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.PCIeNSWrF += (sample[i].total.PCIeNSWrF > sample[i].miss.PCIeNSWrF) ? sample[i].total.PCIeNSWrF - sample[i].miss.PCIeNSWrF : 0;
                 aggregate_sample.PCIeNSWrF += sample[i].total.PCIeNSWrF;
                 if (aggregate_sample.PCIeNSWrF > maxReading.PCIeNSWrF)
@@ -983,8 +983,8 @@ void getPCIeEvents(PCM *m,
             case PCM::RFO:
                 if (opcode == PCM::SKX_RFO || tid == PCM::RFOtid) //Use tid to filter only PCIe traffic
                 {
-                    sample[i].total.RFO += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                    sample[i].miss.RFO += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                    sample[i].total.RFO += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                    sample[i].miss.RFO += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                     sample[i].hit.RFO += (sample[i].total.RFO > sample[i].miss.RFO) ? sample[i].total.RFO - sample[i].miss.RFO : 0;
                     aggregate_sample.RFO += sample[i].total.RFO;
                     if (aggregate_sample.RFO > maxReading.RFO)
@@ -997,8 +997,8 @@ void getPCIeEvents(PCM *m,
             case PCM::ItoM:
                 if (opcode == PCM::SKX_ItoM || tid == PCM::ItoMtid) //Use tid to filter only PCIe traffic
                 {
-                    sample[i].total.ItoM += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                    sample[i].miss.ItoM += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                    sample[i].total.ItoM += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                    sample[i].miss.ItoM += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                     sample[i].hit.ItoM += (sample[i].total.ItoM > sample[i].miss.ItoM) ? sample[i].total.ItoM - sample[i].miss.ItoM : 0;
                     aggregate_sample.ItoM += sample[i].total.ItoM;
                     if (aggregate_sample.ItoM > maxReading.ItoM)
@@ -1009,8 +1009,8 @@ void getPCIeEvents(PCM *m,
                 break;
             case PCM::SKX_WiL:
             case PCM::WiL:
-                sample[i].total.WiL += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                sample[i].miss.WiL += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                sample[i].total.WiL += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                sample[i].miss.WiL += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.WiL += (sample[i].total.WiL > sample[i].miss.WiL) ? sample[i].total.WiL - sample[i].miss.WiL : 0;
                 aggregate_sample.WiL += sample[i].total.WiL;
                 if (aggregate_sample.WiL > maxReading.WiL)
@@ -1020,8 +1020,8 @@ void getPCIeEvents(PCM *m,
                 break;
             case PCM::SKX_PRd:
             case PCM::PRd:
-                sample[i].total.PRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                sample[i].miss.PRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                sample[i].total.PRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                sample[i].miss.PRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.PRd += (sample[i].total.PRd > sample[i].miss.PRd) ? sample[i].total.PRd - sample[i].miss.PRd : 0;
                 aggregate_sample.PRd += sample[i].total.PRd;
                 if (aggregate_sample.PRd > maxReading.PRd)
@@ -1031,8 +1031,8 @@ void getPCIeEvents(PCM *m,
                 break;
             case PCM::SKX_CRd:
             case PCM::CRd:
-                sample[i].total.CRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                sample[i].miss.CRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                sample[i].total.CRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                sample[i].miss.CRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.CRd += (sample[i].total.CRd > sample[i].miss.CRd) ? sample[i].total.CRd - sample[i].miss.CRd : 0;
                 aggregate_sample.CRd += sample[i].total.CRd;
                 if (aggregate_sample.CRd > maxReading.CRd)
@@ -1042,8 +1042,8 @@ void getPCIeEvents(PCM *m,
                 break;
             case PCM::SKX_DRd:
             case PCM::DRd:
-                sample[i].total.DRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i], after[i]);
-                sample[i].miss.DRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i], after2[i]);
+                sample[i].total.DRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before[i][opIdx], after[i][opIdx]);
+                sample[i].miss.DRd += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.DRd += (sample[i].total.DRd > sample[i].miss.DRd) ? sample[i].total.DRd - sample[i].miss.DRd : 0;
                 aggregate_sample.DRd += sample[i].total.DRd;
                 if (aggregate_sample.DRd > maxReading.DRd)
