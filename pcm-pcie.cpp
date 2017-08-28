@@ -300,7 +300,7 @@ int main(int argc, char * argv[])
         // for non-CSV mode delay < 1.0 does not make a lot of practical sense: 
         // hard to read from the screen, or
         // in case delay is not provided in command line => set default
-        if (((delay < 1.0) && (delay > 0.0)) || (delay <= 0.0)) delay = PCM_DELAY_DEFAULT;
+        if ((delay <= 0.0)) delay = PCM_DELAY_DEFAULT;
     }
 
     cerr << "Update every " << delay << " seconds" << endl;
@@ -308,7 +308,7 @@ int main(int argc, char * argv[])
 #define NUM_SAMPLES (1)
 
     uint32 i;
-    uint32 delay_ms = delay;// uint32(delay * 1000 / num_events / NUM_SAMPLES);
+    uint32 delay_ms = 1000 *  delay;// uint32(delay * 1000 / num_events / NUM_SAMPLES);
     printf("PCM-PHUB delay=%d, and during which period all counters are read.\n", delay_ms);
     if (delay_ms * num_events * NUM_SAMPLES < delay * 1000) ++delay_ms; //Adjust the delay_ms if it's less than delay time
     sample_t sample[num_events];
@@ -355,12 +355,12 @@ int main(int argc, char * argv[])
         else
         {
             opcodes.push_back(m->PCIeRdCur);
-            opcodes.push_back(m->RFO);
-            opcodes.push_back(m->CRd);
-            opcodes.push_back(m->DRd);
+            //opcodes.push_back(m->RFO);
+            //opcodes.push_back(m->CRd);
+            //opcodes.push_back(m->DRd);
             opcodes.push_back(m->ItoM);
-            opcodes.push_back(m->PRd);
-            opcodes.push_back(m->WiL);
+            //opcodes.push_back(m->PRd);
+            //opcodes.push_back(m->WiL);
             tids.at(1) = m->RFOtid;
             tids.at(4) = m->ItoMtid;
         }
@@ -760,14 +760,16 @@ int main(int argc, char * argv[])
                         cout << "        " << unit_format((aggregate_sample.PCIeRdCur + aggregate_sample.CRd + aggregate_sample.DRd + aggregate_sample.RFO) * 64ULL);
                         cout << "        " << unit_format((aggregate_sample.ItoM + aggregate_sample.RFO) * 64ULL);
                     }
-                    cout << "\n\n";
-                    bool newVal = false;
-                    if (PCIeRdCurItoMMaxSum < aggregate_sample.ItoM + aggregate_sample.PCIeRdCur)
+		    bool newVal = false;
+		    auto newSum = aggregate_sample.ItoM + aggregate_sample.PCIeRdCur;
+                    if (PCIeRdCurItoMMaxSum < newSum && newSum < (1L<<60))
                     {
                         newVal = true;
-                        PCIeRdCurItoMMaxSum = aggregate_sample.ItoM + aggregate_sample.PCIeRdCur;
+                        PCIeRdCurItoMMaxSum = newSum;
                     }
-                    cout << "  " << PCIeRdCurItoMMaxSum << (newVal ? "*" : "");
+
+                    cout << "  " << unit_format(PCIeRdCurItoMMaxSum) << (newVal ? "*" : "") << std::endl;
+                    cout << "\n\n";
                 }
             }
             else // Ivytown and Older Architectures
@@ -881,7 +883,7 @@ void getPCIeEvents(PCM *m,
     PCIeCounterState * before2 = new PCIeCounterState[m->getNumSockets()];
     PCIeCounterState * after2 = new PCIeCounterState[m->getNumSockets()];*/
     uint32 i;
-
+    //std::cout<< "selected event count = " << eventCount;
     //launch all counters then figure out what is needed.
     for (size_t opIdx = 0; opIdx < eventCount; opIdx++)
     {
@@ -892,6 +894,7 @@ void getPCIeEvents(PCM *m,
         m->programPCIeCounters(opcode, tid, 0, q, nc);
         for (i = 0; i < m->getNumSockets(); ++i)
             before[i][opIdx] = m->getPCIeCounterState(i);
+	m->programPCIeMissCounters(opcode, tid, q, nc);
         for (i = 0; i < m->getNumSockets(); ++i)
             before2[i][opIdx] = m->getPCIeCounterState(i);
     }
@@ -902,7 +905,6 @@ void getPCIeEvents(PCM *m,
         auto tid = tids[opIdx];
         auto nc = ncs[opIdx];
         auto q = qs[opIdx];
-        m->programPCIeMissCounters(opcode, tid, q, nc);
         for (i = 0; i < m->getNumSockets(); ++i)
             after[i][opIdx] = m->getPCIeCounterState(i);
         for (i = 0; i < m->getNumSockets(); ++i)
@@ -924,6 +926,7 @@ void getPCIeEvents(PCM *m,
                 sample[i].miss.PCIeRdCur += (sizeof(PCIeEvents_t) / sizeof(uint64)) * getNumberOfEvents(before2[i][opIdx], after2[i][opIdx]);
                 sample[i].hit.PCIeRdCur += (sample[i].total.PCIeRdCur > sample[i].miss.PCIeRdCur) ? sample[i].total.PCIeRdCur - sample[i].miss.PCIeRdCur : 0;
                 aggregate_sample.PCIeRdCur += sample[i].total.PCIeRdCur;
+		//std::cout<<"PCIeRdCur from sock = " << i << " is " << sample[i].total.PCIeRdCur << std::endl;
                 if (aggregate_sample.PCIeRdCur > maxReading.PCIeRdCur)
                 {
                     maxReading.PCIeRdCur = aggregate_sample.PCIeRdCur;
