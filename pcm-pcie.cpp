@@ -768,7 +768,7 @@ int main(int argc, char * argv[])
                         PCIeRdCurItoMMaxSum = newSum;
                     }
 
-                    cout << "  " << unit_format(PCIeRdCurItoMMaxSum) << (newVal ? "*" : "") << "Raw = " << PCIeRdCurItoMMaxSum / 1000000 << " M " << std::endl;
+                    cout << "  " << unit_format(PCIeRdCurItoMMaxSum) << (newVal ? "*" : "") << " (Raw = " << PCIeRdCurItoMMaxSum / 1000000 << " M)" << std::endl;
                     cout << "\n\n";
                 }
             }
