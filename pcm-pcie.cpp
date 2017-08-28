@@ -680,7 +680,7 @@ int main(int argc, char * argv[])
         unsigned int ic = 1;
         while ((ic <= numberOfIterations) || (numberOfIterations == 0))
         {
-            MySleepMs(delay_ms);
+            //MySleepMs(delay_ms);
             memset(sample, 0, sizeof(sample));
             memset(&aggregate_sample, 0, sizeof(aggregate_sample));
 
@@ -768,7 +768,7 @@ int main(int argc, char * argv[])
                         PCIeRdCurItoMMaxSum = newSum;
                     }
 
-                    cout << "  " << unit_format(PCIeRdCurItoMMaxSum) << (newVal ? "*" : "") << std::endl;
+                    cout << "  " << unit_format(PCIeRdCurItoMMaxSum) << (newVal ? "*" : "") << "Raw = " << PCIeRdCurItoMMaxSum / 1000000 << " M " << std::endl;
                     cout << "\n\n";
                 }
             }
